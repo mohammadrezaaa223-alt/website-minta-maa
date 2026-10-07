@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Maafin Aku Ya 🤍</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Poppins:wght@300;400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   1. RESET & VARIABEL
+   ============================================================ */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --pink: #ff6b9d;
+  --pink-soft: #ffb3c6;
+  --pink-deep: #e0437a;
+  --purple: #8b5cf6;
+  --purple-soft: #b794f6;
+  --gold: #ffd93d;
+  --bg-1: #0d0718;
+  --bg-2: #1a0f2e;
+  --text: #f6f0ff;
+  --text-dim: #b9a8d4;
+  --glass: rgba(255, 255, 255, 0.045);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow-glow: 0 0 60px rgba(255, 107, 157, 0.35);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--bg-1);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   2. BACKGROUND (gradient + glow blobs + canvas)
+   ============================================================ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 10%, rgba(139, 92, 246, 0.25), transparent 60%),
+    radial-gradient(ellipse 70% 55% at 85% 20%, rgba(255, 107, 157, 0.22), transparent 60%),
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(224, 67, 122, 0.18), transparent 65%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-1) 100%);
+  z-index: -3;
+  animation: bgShift 18s ease-in-out infinite alternate;
+}
+
+@keyframes bgShift {
+  0%   { filter: hue-rotate(0deg) saturate(1); }
+  100% { filter: hue-rotate(18deg) saturate(1.15); }
+}
+
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.5;
+}
+.glow-1 {
+  width: 480px;
+  height: 480px;
+  background: var(--pink);
+  top: -160px;
+  left: -160px;
+  animation: floatGlow 14s ease-in-out infinite;
+}
+.glow-2 {
+  width: 520px;
+  height: 520px;
+  background: var(--purple);
+  bottom: -200px;
+  right: -180px;
+  animation: floatGlow 18s ease-in-out infinite reverse;
+}
+
+@keyframes floatGlow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(60px, 40px) scale(1.12); }
+}
+
+/* ============================================================
+   3. LAYOUT UMUM
+   ============================================================ */
+main {
+  position: relative;
+  z-index: 1;
+}
+
+.section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 90px 22px;
+}
+
+/* Efek reveal saat scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(38px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   4. HERO
+   ============================================================ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 22px;
+  position: relative;
+}
+
+.hero-heart {
+  width: 120px;
+  height: 110px;
+  margin-bottom: 34px;
+  filter: drop-shadow(0 0 32px rgba(255, 107, 157, 0.65));
+  animation: heartBeat 1.6s ease-in-out infinite;
+}
+
+.hero-heart svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  14%      { transform: scale(1.16); }
+  28%      { transform: scale(1); }
+  42%      { transform: scale(1.12); }
+  70%      { transform: scale(1); }
+}
+
+.hero-title {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2.4rem, 8vw, 4.6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(120deg, #fff 10%, var(--pink-soft) 45%, var(--purple-soft) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 18px;
+  opacity: 0;
+  animation: fadeUp 1.1s 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-sub {
+  font-size: clamp(0.95rem, 2.6vw, 1.15rem);
+  font-weight: 300;
+  color: var(--text-dim);
+  max-width: 480px;
+  opacity: 0;
+  animation: fadeUp 1.1s 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.scroll-btn {
+  margin-top: 58px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 28px;
+  border-radius: 100px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0;
+  animation: fadeUp 1.1s 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.scroll-btn:hover {
+  border-color: var(--pink);
+  background: rgba(255, 107, 157, 0.12);
+  box-shadow: 0 8px 34px rgba(255, 107, 157, 0.3);
+  transform: translateY(-3px);
+}
+
+.scroll-btn span {
+  display: inline-block;
+  animation: bounceArrow 1.8s ease-in-out infinite;
+}
+
+@keyframes bounceArrow {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(5px); }
+}
+
+/* ============================================================
+   5. KARTU KACA
+   ============================================================ */
+.card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 26px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 46px 40px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+}
+
+.card-label {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--pink);
+  border: 1px solid rgba(255, 107, 157, 0.35);
+  background: rgba(255, 107, 157, 0.09);
+  padding: 6px 16px;
+  border-radius: 100px;
+  margin-bottom: 26px;
+}
+
+.card h2 {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.7rem, 5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 30px;
+  color: #fff;
+}
+
+/* ============================================================
+   6. ISI SURAT
+   ============================================================ */
+.letter-body p {
+  font-size: clamp(0.94rem, 2.4vw, 1.04rem);
+  font-weight: 300;
+  color: #ddd2f0;
+  margin-bottom: 22px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.letter.visible .letter-body p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Delay bertahap tiap paragraf */
+.letter.visible .letter-body p:nth-child(1) { transition-delay: 0.15s; }
+.letter.visible .letter-body p:nth-child(2) { transition-delay: 0.32s; }
+.letter.visible .letter-body p:nth-child(3) { transition-delay: 0.49s; }
+.letter.visible .letter-body p:nth-child(4) { transition-delay: 0.66s; }
+.letter.visible .letter-body p:nth-child(5) { transition-delay: 0.83s; }
+.letter.visible .letter-body p:nth-child(6) { transition-delay: 1.0s; }
+.letter.visible .letter-body p:nth-child(7) { transition-delay: 1.17s; }
+
+.letter-body em {
+  color: var(--pink-soft);
+  font-style: italic;
+}
+
+.letter-body strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.highlight-line {
+  display: block;
+  padding: 16px 20px;
+  margin: 6px 0 22px;
+  border-left: 3px solid var(--pink);
+  background: linear-gradient(90deg, rgba(255, 107, 157, 0.14), transparent);
+  border-radius: 0 12px 12px 0;
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.signature {
+  margin-top: 34px;
+  text-align: right;
+  font-family: "Caveat", cursive;
+  font-size: 1.9rem;
+  color: var(--pink-soft);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: all 0.9s 1.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.letter.visible .signature {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   7. SECTION TITLE
+   ============================================================ */
+.section-title {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.6rem, 5vw, 2.3rem);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 14px;
+  color: #fff;
+}
+
+.section-desc {
+  text-align: center;
+  color: var(--text-dim);
+  font-weight: 300;
+  font-size: 0.94rem;
+  max-width: 520px;
+  margin: 0 auto 48px;
+}
+
+/* ============================================================
+   8. GRID KARTU ALASAN
+   ============================================================ */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+.mini-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 30px 26px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.45s,
+              box-shadow 0.45s;
+  position: relative;
+  overflow: hidden;
+}
+
+.mini-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 107, 157, 0.16), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.45s;
+}
+
+.mini-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(255, 107, 157, 0.5);
+  box-shadow: 0 20px 50px rgba(255, 107, 157, 0.18);
+}
+
+.mini-card:hover::after {
+  opacity: 1;
+}
+
+.mini-icon {
+  font-size: 1.7rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.mini-card h3 {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.mini-card p {
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--text-dim);
+  line-height: 1.75;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   9. DAFTAR JANJI
+   ============================================================ */
+.promise-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.promise-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-size: 0.93rem;
+  font-weight: 300;
+  color: #ded3f2;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.promise-list li:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  background: rgba(139, 92, 246, 0.09);
+  transform: translateX(8px);
+}
+
+.check {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  font-size: 0.75rem;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 0 20px rgba(255, 107, 157, 0.45);
+}
+
+/* ============================================================
+   10. SECTION PERTANYAAN
+   ============================================================ */
+.question {
+  text-align: center;
+  padding-bottom: 130px;
+}
+
+.question h2 {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.9rem, 6vw, 3rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.question p {
+  color: var(--text-dim);
+  font-weight: 300;
+  margin-bottom: 48px;
+  font-size: 0.96rem;
+}
+
+.btn-group {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 130px;
+  position: relative;
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 0.96rem;
+  font-weight: 500;
+  padding: 16px 42px;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.35s,
+              background 0.35s;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-yes {
+  background: linear-gradient(135deg, var(--pink), var(--pink-deep));
+  color: #fff;
+  box-shadow: 0 12px 40px rgba(255, 107, 157, 0.42);
+}
+
+.btn-yes:hover {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 18px 55px rgba(255, 107, 157, 0.65);
+}
+
+.btn-yes:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+.btn-no {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  color: var(--text-dim);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s;
+}
+
+/* ============================================================
+   11. PESAN SUKSES
+   ============================================================ */
+.success-message {
+  max-width: 620px;
+  margin: 46px auto 0;
+  padding: 0 22px;
+  opacity: 0;
+  transform: translateY(30px) scale(0.96);
+  pointer-events: none;
+  transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.success-message.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.success-inner {
+  background: linear-gradient(145deg, rgba(255, 107, 157, 0.16), rgba(139, 92, 246, 0.12));
+  border: 1px solid rgba(255, 107, 157, 0.35);
+  border-radius: 24px;
+  padding: 38px 32px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 24px 70px rgba(255, 107, 157, 0.2);
+}
+
+.success-inner h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 14px;
+}
+
+.success-inner p {
+  font-weight: 300;
+  font-size: 0.94rem;
+  color: #e6dcf7;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   12. CONFETTI HATI
+   ============================================================ */
+.confetti {
+  position: fixed;
+  font-size: 1.5rem;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform, opacity;
+}
+
+/* ============================================================
+   13. RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .card {
+    padding: 34px 24px;
+    border-radius: 22px;
+  }
+  .section {
+    padding: 68px 18px;
+  }
+  .btn {
+    padding: 15px 34px;
+    font-size: 0.9rem;
+  }
+  .hero-heart {
+    width: 96px;
+    height: 88px;
+  }
+}
+
+/* Hormati preferensi reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== BACKGROUND ===== -->
+<canvas id="bg-canvas"></canvas>
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+
+<main>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="hero-heart">
+      <svg viewBox="0 0 32 29.6" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ff6b9d"/>
+            <stop offset="55%" stop-color="#e0437a"/>
+            <stop offset="100%" stop-color="#8b5cf6"/>
+          </linearGradient>
+        </defs>
+        <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"
+              fill="url(#heartGrad)"/>
+      </svg>
+    </div>
+
+    <h1 class="hero-title">Maafin Aku Ya</h1>
+    <p class="hero-sub">Untuk kamu yang lagi marah banget sama aku. Aku bikin ini bukan buat cari perhatian — tapi karena aku beneran nggak nyaman kalau kita kayak gini.</p>
+
+    <a href="#surat" class="scroll-btn">Baca dulu ya <span>↓</span></a>
+  </section>
+
+  <!-- ================= SURAT ================= -->
+  <section class="section" id="surat">
+    <div class="card letter reveal">
+      <div class="card-label">Surat Kecil</div>
+      <h2>Untuk Kamu,<br/>Yang Sedang Marah</h2>
+
+      <div class="letter-body">
+        <p>
+          Aku tahu kamu lagi marah banget. Dan aku nggak akan nyari alasan,
+          nggak akan bela diri, nggak akan bilang <em>"aku kan nggak bermaksud gitu."</em>
+        </p>
+
+        <p>
+          Karena yang paling penting sekarang bukan <strong>maksudku</strong> —
+          tapi apa yang <strong>kamu rasain</strong>.
+        </p>
+
+        <span class="highlight-line">
+          "Aku sadar aku salah. Dan aku nggak butuh kamu bilang itu dulu supaya aku ngerti."
+        </span>
+
+        <p>
+          Aku minta maaf karena udah bikin kamu kecewa. Aku minta maaf karena
+          kata-kataku / sikapku / kelakuanku nyakitin kamu — dan itu bukan salah kamu.
+          Itu murni salahku.
+        </p>
+
+        <p>
+          Aku juga minta maaf karena udah bikin kamu capek. Capek ngadepin aku,
+          capek ngertiin aku, capek nahan kesel sendirian. Kamu nggak seharusnya
+          nanggung itu semua.
+        </p>
+
+        <p>
+          Aku nggak minta kamu langsung maafin aku sekarang. Aku cuma minta
+          kamu tahu satu hal: <strong>aku dengerin kamu, aku ngerti kenapa kamu marah,
+          dan aku serius pengen benerin ini.</strong>
+        </p>
+
+        <p>
+          Kamu jauh lebih berharga buat aku daripada ego aku.
+          Dan kalau harus aku ulang dari awal buat bikin kamu senyum lagi,
+          aku mau.
+        </p>
+      </div>
+
+      <div class="signature">— Aku yang nyesel 🤍</div>
+    </div>
+  </section>
+
+  <!-- ================= YANG MAU AKU BILANG ================= -->
+  <section class="section">
+    <h2 class="section-title reveal">Yang Mau Aku Bilang</h2>
+    <p class="section-desc reveal">Tiga hal yang aku pengen kamu baca pelan-pelan.</p>
+
+    <div class="cards">
+      <div class="mini-card reveal">
+        <span class="mini-icon">🫶</span>
+        <h3>Perasaanmu Valid</h3>
+        <p>Kamu nggak lebay, kamu nggak sensitif, kamu nggak salah. Kalau sesuatu nyakitin kamu, ya memang nyakitin. Titik.</p>
+      </div>
+
+      <div class="mini-card reveal">
+        <span class="mini-icon">👂</span>
+        <h3>Aku Mau Dengerin</h3>
+        <p>Bukan buat debat, bukan buat mbales. Aku pengen dengerin versi kamu sampai selesai — tanpa potong, tanpa ngejudge.</p>
+      </div>
+
+      <div class="mini-card reveal">
+        <span class="mini-icon">🌱</span>
+        <h3>Aku Mau Berubah</h3>
+        <p>Bukan janji manis doang. Aku mau buktiin pelan-pelan, lewat hal-hal kecil yang aku lakuin setiap hari.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= JANJI ================= -->
+  <section class="section">
+    <h2 class="section-title reveal">Yang Aku Janjiin</h2>
+    <p class="section-desc reveal">Bukan buat manis-manis di depan, tapi buat aku pegang sendiri.</p>
+
+    <ul class="promise-list">
+      <li class="reveal">
+        <span class="check">✓</span>
+        <span>Aku bakal lebih dengerin dulu sebelum ngomong — biar nggak ada lagi kata yang nyakitin.</span>
+      </li>
+      <li class="reveal">
+        <span class="check">✓</span>
+        <span>Aku nggak akan ngecilin perasaan kamu, sekecil apapun masalahnya.</span>
+      </li>
+      <li class="reveal">
+        <span class="check">✓</span>
+        <span>Kalau aku salah, aku ngaku. Nggak muter-muter, nggak nyari pembenaran.</span>
+      </li>
+      <li class="reveal">
+        <span class="check">✓</span>
+        <span>Aku bakal jaga apa yang kamu percayain ke aku — dan nggak main-main sama itu.</span>
+      </li>
+      <li class="reveal">
+        <span class="check">✓</span>
+        <span>Aku bakal tetap ada, walau kamu lagi marah, lagi diem, lagi males ngomong sama aku.</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ================= PERTANYAAN ================= -->
+  <section class="section question">
+    <h2 class="reveal">Mau maafin aku?</h2>
+    <p class="reveal">Nggak harus sekarang kok. Aku cuma pengen tahu kamu baca sampai sini. 🤍</p>
+
+    <div class="btn-group reveal">
+      <button class="btn btn-yes" id="btnYes">Iya, aku maafin 🤍</button>
+      <button class="btn btn-no" id="btnNo">Masih kesel 😤</button>
+    </div>
+
+    <div class="success-message" id="successMsg">
+      <div class="success-inner">
+        <h3>Makasih ya, Sayang 🤍</h3>
+        <p>
+          Aku nggak akan nyia-nyiain kepercayaan yang kamu kasih.
+          Sekarang, boleh aku peluk? (walau lewat layar dulu 🥺)
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ============================================================
+   KONFIGURASI — ganti sesuai kebutuhan kamu
+   ============================================================ */
+const CONFIG = {
+  namaPacar: "Sayang",          // ganti dengan nama panggilan dia
+  jumlahPartikel: 55            // jumlah hati melayang di background
+};
+
+/* ============================================================
+   1. BACKGROUND PARTIKEL (Canvas)
+   ============================================================ */
+(function initParticles() {
+  const canvas = document.getElementById("bg-canvas");
+  const ctx = canvas.getContext("2d");
+
+  let width, height, particles;
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  // Menggambar bentuk hati ke canvas
+  function drawHeart(x, y, size) {
+    const top = size * 0.3;
+    ctx.beginPath();
+    ctx.moveTo(x, y + top);
+    ctx.bezierCurveTo(x, y, x - size / 2, y, x - size / 2, y + top);
+    ctx.bezierCurveTo(x - size / 2, y + (size + top) / 2, x, y + (size + top) / 2, x, y + size);
+    ctx.bezierCurveTo(x, y + (size + top) / 2, x + size / 2, y + (size + top) / 2, x + size / 2, y + top);
+    ctx.bezierCurveTo(x + size / 2, y, x, y, x, y + top);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function createParticles() {
+    particles = [];
+    for (let i = 0; i < CONFIG.jumlahPartikel; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 10 + 5,
+        speedY: Math.random() * 0.55 + 0.18,
+        drift: Math.random() * 0.5 - 0.25,
+        opacity: Math.random() * 0.45 + 0.12,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.012,
+        hue: Math.random() > 0.5 ? "255, 107, 157" : "139, 92, 246"
+      });
+    }
+  }
+
+  function resize() {
+    width = canvas.clientWidth;
+    height = canvas.clientHeight;
+    canvas.width = width * DPR;
+    canvas.height = height * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    createParticles();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    particles.forEach((p) => {
+      // Update posisi
+      p.y -= p.speedY;
+      p.x += p.drift;
+      p.rotation += p.rotSpeed;
+
+      // Reset kalau keluar layar
+      if (p.y < -30) {
+        p.y = height + 20;
+        p.x = Math.random() * width;
+      }
+      if (p.x < -30) p.x = width + 20;
+      if (p.x > width + 30) p.x = -20;
+
+      // Gambar
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation);
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = `rgba(${p.hue}, 1)`;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = `rgba(${p.hue}, 0.8)`;
+      drawHeart(0, 0, p.size);
+      ctx.restore();
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+  animate();
+})();
+
+/* ============================================================
+   2. REVEAL SAAT SCROLL (IntersectionObserver)
+   ============================================================ */
+(function initReveal() {
+  const elements = document.querySelectorAll(".reveal");
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -60px 0px" }
+  );
+
+  elements.forEach((el) => observer.observe(el));
+})();
+
+/* ============================================================
+   3. TOMBOL "MASIH KESEL" YANG KABUR
+   ============================================================ */
+(function initRunawayButton() {
+  const btnNo = document.getElementById("btnNo");
+  const btnYes = document.getElementById("btnYes");
+  let dodgeCount = 0;
+
+  const teksTahap = [
+    "Masih kesel 😤",
+    "Eh jangan dipencet 😳",
+    "Aku kabur ya 🏃",
+    "Nggak bisa ditangkep 😝",
+    "Yaudah maafin ya 🥺",
+    "Pencet yang kiri aja 💗"
+  ];
+
+  function kabur() {
+    // Geser tombol ke posisi acak
+    const x = (Math.random() - 0.5) * Math.min(window.innerWidth * 0.55, 320);
+    const y = (Math.random() - 0.5) * 140;
+
+    btnNo.style.transform = `translate(${x}px, ${y}px) rotate(${(Math.random() - 0.5) * 14}deg)`;
+
+    // Ganti teks bertahap
+    dodgeCount++;
+    if (dodgeCount < teksTahap.length) {
+      btnNo.textContent = teksTahap[dodgeCount];
+    }
+
+    // Tombol "Iya" makin menggoda
+    const scale = 1 + Math.min(dodgeCount * 0.045, 0.3);
+    btnYes.style.transform = `scale(${scale})`;
+  }
+
+  // Desktop: kabur saat didekati kursor
+  btnNo.addEventListener("mouseenter", kabur);
+
+  // Mobile: kabur saat disentuh
+  btnNo.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    kabur();
+  }, { passive: false });
+
+  // Kalau tetap dipaksa klik
+  btnNo.addEventListener("click", (e) => {
+    e.preventDefault();
+    kabur();
+  });
+})();
+
+/* ============================================================
+   4. TOMBOL "IYA" — LEDAKAN HATI + PESAN SUKSES
+   ============================================================ */
+(function initYesButton() {
+  const btnYes = document.getElementById("btnYes");
+  const successMsg = document.getElementById("successMsg");
+  const btnGroup = document.querySelector(".btn-group");
+  let sudahDiklik = false;
+
+  const EMOJI = ["🤍", "💕", "💖", "✨", "🌸", "💗", "🩷", "💞"];
+
+  function ledakanHati() {
+    const total = 70;
+
+    for (let i = 0; i < total; i++) {
+      const el = document.createElement("div");
+      el.className = "confetti";
+      el.textContent = EMOJI[Math.floor(Math.random() * EMOJI.length)];
+
+      // Titik awal: tengah tombol
+      const rect = btnYes.getBoundingClientRect();
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+
+      el.style.left = startX + "px";
+      el.style.top = startY + "px";
+      el.style.fontSize = (14 + Math.random() * 22) + "px";
+
+      document.body.appendChild(el);
+
+      // Arah dan jarak acak
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 160 + Math.random() * 420;
+      const tx = Math.cos(angle) * distance;
+      const ty = Math.sin(angle) * distance - 120; // sedikit ke atas
+      const rot = (Math.random() - 0.5) * 900;
+      const duration = 1400 + Math.random() * 1200;
+      const delay = Math.random() * 220;
+
+      el.animate(
+        [
+          {
+            transform: "translate(-50%, -50%) scale(0) rotate(0deg)",
+            opacity: 1
+          },
+          {
+            transform: `translate(calc(-50% + ${tx * 0.7}px), calc(-50% + ${ty * 0.7}px)) scale(1.3) rotate(${rot * 0.6}deg)`,
+            opacity: 1,
+            offset: 0.55
+          },
+          {
+            transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty + 160}px)) scale(0.5) rotate(${rot}deg)`,
+            opacity: 0
+          }
+        ],
+        {
+          duration: duration,
+          delay: delay,
+          easing: "cubic-bezier(0.16, 0.9, 0.3, 1)",
+          fill: "forwards"
+        }
+      );
+
+      setTimeout(() => el.remove(), duration + delay + 200);
+    }
+  }
+
+  btnYes.addEventListener("click", () => {
+    if (sudahDiklik) return;
+    sudahDiklik = true;
+
+    ledakanHati();
+
+    // Sembunyikan tombol
+    btnGroup.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+    btnGroup.style.opacity = "0";
+    btnGroup.style.transform = "scale(0.92)";
+
+    setTimeout(() => {
+      btnGroup.style.display = "none";
+      successMsg.classList.add("show");
+      successMsg.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 520);
+
+    // Ledakan susulan biar makin meriah
+    setTimeout(ledakanHati, 650);
+    setTimeout(ledakanHati, 1300);
+  });
+})();
+
+/* ============================================================
+   5. PARALLAX HALUS PADA GLOW (mengikuti kursor)
+   ============================================================ */
+(function initParallax() {
+  const glow1 = document.querySelector(".glow-1");
+  const glow2 = document.querySelector(".glow-2");
+  let targetX = 0, targetY = 0;
+  let currentX = 0, currentY = 0;
+
+  window.addEventListener("mousemove", (e) => {
+    targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+    targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  function loop() {
+    currentX += (targetX - currentX) * 0.045;
+    currentY += (targetY - currentY) * 0.045;
+
+    glow1.style.transform = `translate(${currentX * 45}px, ${currentY * 45}px)`;
+    glow2.style.transform = `translate(${currentX * -55}px, ${currentY * -55}px)`;
+
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+
+</body>
+</html>
